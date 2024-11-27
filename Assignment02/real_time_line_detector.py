@@ -1,5 +1,6 @@
 from sklearn.linear_model import RANSACRegressor
 import cv2
+import time
 import numpy as np
 
 
@@ -11,6 +12,8 @@ canny_threshold1 = 50
 canny_threshold2 = 150
 
 while True:
+	start_time = time.time()
+
 	ret, frame = cap.read()
 	if not ret:
 		break
@@ -47,7 +50,13 @@ while True:
 		# Draw the line from x1,y1 to x2,y2 and have it green
 		cv2.line(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
 	
-	
+	end_time = time.time()
+	frame_time = end_time - start_time
+	fps = 1 / (end_time - start_time)
+
+	cv2.putText(frame, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+	cv2.putText(frame, f"Processing time: {frame_time:.4f}", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+
 	cv2.imshow("Line Detection", frame)
 	
 	if cv2.waitKey(1) & 0xFF == ord('q'):
